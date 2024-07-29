@@ -124,10 +124,11 @@ async function handleApiRequest(path, request, env) {
     case "room": {
       // Request for `/api/room/...`.
 
-      if (!path[1]) {
         // The request is for just "/api/room", with no ID.
-        if (request.method == "POST") {
-          // POST to /api/room creates a private room.
+      if (!path[1]) {
+        switch (request.method){
+          case "POST":{
+                 // POST to /api/room creates a private room.
           //
           // Incidentally, this code doesn't actually store anything. It just generates a valid
           // unique ID for this namespace. Each durable object namespace has its own ID space, but
@@ -142,8 +143,11 @@ async function handleApiRequest(path, request, env) {
           // well, unique!
           let id = env.rooms.newUniqueId();
           return new Response(id.toString(), {headers: {"Access-Control-Allow-Origin": "*"}});
-        } else {
-          // If we wanted to support returning a list of public rooms, this might be a place to do
+     
+          }
+
+          case "GET": {
+                  // If we wanted to support returning a list of public rooms, this might be a place to do
           // it. The list of room names might be a good thing to store in KV, though a singleton
           // Durable Object is also a possibility as long as the Cache API is used to cache reads.
           // (A caching layer would be needed because a single Durable Object is single-threaded,
@@ -152,6 +156,11 @@ async function handleApiRequest(path, request, env) {
           //
           // For this demo, though, we're not implementing a public room list, mainly because
           // inevitably some trolls would probably register a bunch of offensive room names. Sigh.
+          
+          return new Response('get request のテスト', {headers: {"Access-Control-Allow-Origin": "*"}});
+          }
+
+          default:
           return new Response("Method not allowed", {status: 405});
         }
       }

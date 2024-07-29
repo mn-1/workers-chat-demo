@@ -41,6 +41,7 @@ body {
 #roster {
   font-weight: bold;
   padding: 8px;
+  color: 	#FF69B4;
 }
 
 p {
@@ -178,14 +179,16 @@ p:last-of-type {
   <body>
     <form id="name-form" action="/fake-form-action">
       <input id="name-input" placeholder="your name">
-      <p>This chat runs entirely on the edge, powered by<br>
-        <a href="https://blog.cloudflare.com/introducing-workers-durable-objects" target="_blank">Cloudflare Workers Durable Objects</a></p>
+      <p>あなたの名前を入力してEnter🍎</p>
     </form>
     <form id="room-form" action="/fake-form-action">
-      <p>Enter a public room:</p>
+      <p>公開しても良いルームを作る時はこちら:
+<br/>ルーム名は32文字以内で、英数字、ハイフン、アンダースコアのみ使用可能です。
+
+      </p>
       <input id="room-name" placeholder="room name"><button id="go-public">Go &raquo;</button>
       <p>OR</p>
-      <button id="go-private">Create a Private Room &raquo;</button>
+      <button id="go-private">非公開ルームを作る時はこちら &raquo;</button>
     </form>
     <form id="chatroom" action="/fake-form-action">
       <div id="chatlog">
@@ -423,19 +426,18 @@ function join() {
       // All pre-join messages have been delivered.
       if (!wroteWelcomeMessages) {
         wroteWelcomeMessages = true;
+        // addChatMessage(null,
+        //     "* This is a demo app built with Cloudflare Workers Durable Objects. The source code " +
+        //     "can be found at: https://github.com/cloudflare/workers-chat-demo");
         addChatMessage(null,
-            "* This is a demo app built with Cloudflare Workers Durable Objects. The source code " +
-            "can be found at: https://github.com/cloudflare/workers-chat-demo");
-        addChatMessage(null,
-            "* WARNING: Participants in this chat are random people on the internet. " +
-            "Names are not authenticated; anyone can pretend to be anyone. The people " +
-            "you are chatting with are NOT Cloudflare employees. Chat history is saved.");
+            "* 警告: このチャットの参加者は、インターネット上のランダムな人々です。誰でも誰かのふりをすることができます。チャット履歴は保存されます。");
         if (roomname.length == 64) {
           addChatMessage(null,
               "* This is a private room. You can invite someone to the room by sending them the URL.");
         } else {
           addChatMessage(null,
-              "* Welcome to #" + roomname + ". Say hi!");
+          `${username}さん、${roomname}にようこそ🍎 何か入力してね！`);
+              
         }
       }
     } else {
